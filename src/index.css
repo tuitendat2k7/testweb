@@ -1,0 +1,701 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300..900;1,300..900&family=Space+Grotesk:wght@300..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --app-bg: #080808;
+  --app-text: #fafafa;
+}
+
+:root.light {
+  --app-bg: #faf9f6;
+  --app-text: #20140c;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom scrollbars for Dark Mode & Light Mode */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 10, 10, 0.05);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.5);
+}
+
+/* Custom CSS Glass effects */
+.glass-panel {
+  background: rgba(16, 16, 16, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.glass-panel-heavy {
+  background: rgba(12, 12, 12, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.glass-card-hover:hover {
+  border-color: rgba(0, 200, 83, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(0, 200, 83, 0.15);
+  background: rgba(24, 24, 24, 0.75);
+}
+
+/* Neomorphic Dark Buttons & Elements */
+.neo-inset {
+  background: #0d0d0d;
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.8), 
+              inset -2px -2px 5px rgba(255, 255, 255, 0.03);
+}
+
+.neo-convex {
+  background: linear-gradient(145deg, #181818, #0e0e0e);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.6), 
+              -3px -3px 10px rgba(255, 255, 255, 0.02);
+}
+
+.neo-convex:active {
+  background: linear-gradient(145deg, #0e0e0e, #141414);
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Light mode support classes */
+:root.light .glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04);
+}
+
+:root.light .glass-panel-heavy {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+:root.light .glass-card-hover:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 10px 30px -5px rgba(16, 185, 129, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+:root.light .neo-inset {
+  background: #f1f5f9;
+  box-shadow: inset 1.5px 1.5px 4px rgba(15, 23, 42, 0.08), 
+              inset -1.5px -1.5px 4px rgba(255, 255, 255, 0.8);
+}
+
+:root.light .neo-convex {
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+  box-shadow: 2px 2px 6px rgba(15, 23, 42, 0.04), 
+              -2px -2px 6px rgba(255, 255, 255, 0.8);
+}
+
+:root.light .neo-convex:active {
+  background: linear-gradient(145deg, #f1f5f9, #f8fafc);
+  box-shadow: inset 1px 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+/* Light Mode general over-rides with robust attribute selectors and escapes */
+:root.light {
+  --app-bg: #fdfbe1;
+  --app-text: #20140c;
+}
+
+:root.light,
+:root.light body,
+:root.light .bg-\[\#080808\], 
+:root.light [class*="bg-[#080808]"] {
+  background-color: #faf9f6 !important;
+  color: #20140c !important;
+}
+
+/* Base text color overrides for neutral classes */
+:root.light .text-\[\#fafafa\],
+:root.light [class*="text-[#fafafa]"],
+:root.light .text-\[\#FAFAFA\],
+:root.light [class*="text-[#FAFAFA]"],
+:root.light .text-neutral-100, 
+:root.light [class*="text-neutral-100"] {
+  color: #20140c !important;
+}
+
+:root.light .text-neutral-200, 
+:root.light [class*="text-neutral-200"] {
+  color: #382516 !important;
+}
+
+:root.light .text-neutral-300, 
+:root.light [class*="text-neutral-300"] {
+  color: #4f3a2c !important;
+}
+
+:root.light .text-neutral-400, 
+:root.light [class*="text-neutral-400"] {
+  color: #705b4a !important;
+}
+
+:root.light .text-neutral-500, 
+:root.light [class*="text-neutral-500"] {
+  color: #8c7866 !important;
+}
+
+/* Ensure general text-white translates to dark warm chocolate in light mode, unless nested inside solid color actions */
+:root.light .text-white,
+:root.light [class*="text-white"] {
+  color: #20140c !important;
+}
+
+/* Revert text white for green/red/orange alerts or solid action items */
+:root.light .bg-emerald-600 *,
+:root.light .bg-emerald-500 *,
+:root.light .bg-teal-600 *,
+:root.light .bg-[#10b981] *,
+:root.light .bg-orange-500 *,
+:root.light .bg-orange-600 *,
+:root.light .bg-indigo-500 *,
+:root.light .bg-pink-500 *,
+:root.light .bg-red-500 *,
+:root.light .bg-amber-500 *,
+:root.light [class*="bg-emerald"] *,
+:root.light [class*="bg-teal"] *,
+:root.light [class*="bg-[#10b981]"] *,
+:root.light [class*="bg-orange"] *,
+:root.light [class*="bg-indigo"] *,
+:root.light [class*="bg-pink"] *,
+:root.light [class*="bg-red"] *,
+:root.light .bg-gradient-to-r:not([class*="bg-clip-text"]) *,
+:root.light [class*="bg-gradient-to-r"]:not([class*="bg-clip-text"]) *,
+:root.light .bg-emerald-600,
+:root.light .bg-emerald-500,
+:root.light .bg-teal-600,
+:root.light .bg-orange-500,
+:root.light .bg-indigo-500,
+:root.light .bg-pink-500,
+:root.light .bg-red-500,
+:root.light .bg-amber-500 {
+  color: #ffffff !important;
+}
+
+/* Card and Glass Panel Overrides */
+:root.light .glass-panel, 
+:root.light [class*="glass-panel"],
+:root.light .bg-\[\#121212\]\/95, 
+:root.light [class*="bg-[#121212]/95"],
+:root.light .bg-neutral-900, 
+:root.light [class*="bg-neutral-900"],
+:root.light .bg-black\/40,
+:root.light [class*="bg-black/40"],
+:root.light .bg-black\/30,
+:root.light [class*="bg-black/30"],
+:root.light .bg-black\/20,
+:root.light [class*="bg-black/20"] {
+  background-color: #ffffff !important;
+  border-color: rgba(184, 134, 11, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.04) !important;
+  color: #20140c !important;
+}
+
+/* Modal backdrop overlay and popups */
+.modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.82) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+:root.light .modal-backdrop,
+:root.light .bg-black\/85,
+:root.light [class*="bg-black/85"],
+:root.light .bg-black\/50,
+:root.light [class*="bg-black/50"] {
+  background-color: rgba(253, 251, 235, 0.72) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+/* Map specific dark containers and markers */
+:root.light .bg-black\/80,
+:root.light [class*="bg-black/80"] {
+  background-color: #ffffff !important;
+  border-color: rgba(184, 134, 11, 0.15) !important;
+  color: #20140c !important;
+}
+
+/* Semi-transparent white utility replacements */
+:root.light .bg-white\/5,
+:root.light [class*="bg-white/5"] {
+  background-color: rgba(184, 134, 11, 0.05) !important;
+  border-color: rgba(184, 134, 11, 0.08) !important;
+  color: #3e2723 !important;
+}
+
+:root.light .bg-white\/15,
+:root.light [class*="bg-white/15"],
+:root.light .bg-white\/10,
+:root.light [class*="bg-white/10"] {
+  background-color: rgba(184, 134, 11, 0.08) !important;
+  border-color: rgba(184, 134, 11, 0.12) !important;
+  color: #20140c !important;
+}
+
+:root.light .hover\:bg-white\/10:hover,
+:root.light [class*="hover:bg-white/10"]:hover,
+:root.light .hover\:bg-white\/15:hover,
+:root.light [class*="hover:bg-white/15"]:hover {
+  background-color: rgba(184, 134, 11, 0.15) !important;
+  color: #1a0f07 !important;
+}
+
+/* Map Vector Roads and Grid lines inside MapPanel */
+:root.light [class*="bg-[#0a0a0a]"] {
+  background-color: #f7f3cb !important;
+}
+
+:root.light [class*="bg-[#0a0a0a]"] svg line {
+  stroke: #e7dfa7 !important;
+}
+
+:root.light [class*="bg-[#0a0a0a]"] svg line[stroke*="2c2c2e"] {
+  stroke: #d7cd87 !important;
+}
+
+:root.light [class*="bg-[#0a0a0a]"] svg pattern path {
+  stroke: #8d6e63 !important;
+  stroke-opacity: 0.08 !important;
+}
+
+/* Secondary deep backgrounds (inputs, select fields, admin panels, map satellite areas) */
+:root.light .bg-\[\#18181b\], 
+:root.light [class*="bg-[#18181b]"],
+:root.light .bg-\[\#161616\], 
+:root.light [class*="bg-[#161616]"],
+:root.light .bg-\[\#0a0a0a\], 
+:root.light [class*="bg-[#0a0a0a]"],
+:root.light select,
+:root.light input,
+:root.light textarea {
+  background-color: #fcf9db !important;
+  border-color: rgba(184, 134, 11, 0.16) !important;
+  color: #20140c !important;
+}
+
+:root.light input::placeholder,
+:root.light textarea::placeholder {
+  color: #a79a83 !important;
+}
+
+:root.light .border-white\/5, 
+:root.light [class*="border-white/5"],
+:root.light .border-white\/10,
+:root.light [class*="border-white/10"] {
+  border-color: rgba(184, 134, 11, 0.12) !important;
+}
+
+/* Cozy warm amber-gold highlights replacing cold green icons and banners in light yellow mode */
+:root.light .text-\[\#5eff90\],
+:root.light [class*="text-[#5eff90]"],
+:root.light .text-emerald-300,
+:root.light [class*="text-emerald-300"],
+:root.light .text-emerald-400,
+:root.light [class*="text-emerald-400"],
+:root.light .text-emerald-500,
+:root.light [class*="text-emerald-500"],
+:root.light .text-emerald-600,
+:root.light [class*="text-emerald-600"],
+:root.light [class*="hover:text-emerald-300"]:hover,
+:root.light [class*="hover:text-emerald-400"]:hover {
+  color: #c2410c !important; /* Premium rich cinnamon/orange rust */
+}
+
+/* Spinner and track borders translation */
+:root.light .border-t-emerald-500,
+:root.light [class*="border-t-emerald-500"] {
+  border-top-color: #ea580c !important;
+}
+
+:root.light .bg-\[\#5eff90\]\/10,
+:root.light [class*="bg-[#5eff90]/10"],
+:root.light .bg-emerald-500\/10,
+:root.light [class*="bg-emerald-500/10"],
+:root.light .bg-emerald-500\/20,
+:root.light [class*="bg-emerald-500/20"],
+:root.light .bg-emerald-500\/25,
+:root.light [class*="bg-emerald-500/25"],
+:root.light .bg-emerald-600\/10,
+:root.light .bg-emerald-600\/15 {
+  background-color: rgba(234, 88, 12, 0.1) !important; /* Soft warm pumpkin tint */
+  border-color: rgba(234, 88, 12, 0.16) !important;
+}
+
+:root.light .border-\[\#5eff90\],
+:root.light [class*="border-[#5eff90]"],
+:root.light .border-emerald-500\/30,
+:root.light [class*="border-emerald-500/30"],
+:root.light .border-emerald-500\/40,
+:root.light [class*="border-emerald-500/40"],
+:root.light .border-emerald-500 {
+  border-color: rgba(234, 88, 12, 0.25) !important;
+}
+
+:root.light .bg-emerald-600,
+:root.light [class*="bg-emerald-600"],
+:root.light .bg-emerald-500,
+:root.light [class*="bg-emerald-500"],
+:root.light .bg-teal-600,
+:root.light [class*="bg-teal-600"],
+:root.light .bg-teal-700,
+:root.light [class*="bg-teal-700"] {
+  background-image: none !important;
+  background-color: #ea580c !important; /* Warm, energetic bóc/cóc orange */
+  color: #ffffff !important;
+}
+
+:root.light .hover\:bg-emerald-500:hover,
+:root.light .hover\:bg-emerald-600:hover,
+:root.light .hover\:bg-emerald-700:hover,
+:root.light [class*="hover:bg-emerald"]:hover,
+:root.light [class*="hover:bg-teal"]:hover {
+  background-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+/* Make custom gradients look like a beautiful warm golden-to-peach sunset transition instead of cold greens */
+:root.light .bg-gradient-to-r:not([class*="bg-clip-text"]):not([class*="text-transparent"]):not([class*="group-hover"]):not([class*="from-black"]):not([class*="to-transparent"]):not([class*="black/"]),
+:root.light [class*="bg-gradient-to-r"]:not([class*="bg-clip-text"]):not([class*="text-transparent"]):not([class*="group-hover"]):not([class*="from-black"]):not([class*="to-transparent"]):not([class*="black/"]) {
+  background-image: linear-gradient(to right, #ea580c, #f59e0b) !important;
+}
+
+:root.light .bg-gradient-to-br:not([class*="bg-clip-text"]):not([class*="text-transparent"]):not([class*="group-hover"]):not([class*="from-black"]):not([class*="to-transparent"]):not([class*="black/"]),
+:root.light [class*="bg-gradient-to-br"]:not([class*="bg-clip-text"]):not([class*="text-transparent"]):not([class*="group-hover"]):not([class*="from-black"]):not([class*="to-transparent"]):not([class*="black/"]) {
+  background-image: linear-gradient(to bottom right, #f59e0b, #ea580c) !important;
+}
+
+/* Metallic Gradients text overrides */
+.text-rose-gold {
+  background: linear-gradient(135deg, #f7d6c8 0%, #f1bfae 30%, #e0aa96 70%, #f7d6c8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:root.light .text-rose-gold {
+  background: linear-gradient(135deg, #a76d5a 0%, #8b503e 50%, #4c1d11 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-chrome-silver {
+  background: linear-gradient(135deg, #ffffff 0%, #e5e5e5 35%, #b5b5b5 70%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:root.light .text-chrome-silver {
+  background: linear-gradient(135deg, #1e293b 0%, #475569 50%, #0f172a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-jade-glow {
+  background: linear-gradient(135deg, #5eff90 0%, #00c853 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 8px rgba(0, 200, 83, 0.45));
+}
+
+:root.light .text-jade-glow {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
+}
+
+.bg-metallic-chrome {
+  background: linear-gradient(135deg, #2e2e2e 0%, #1a1a1a 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+}
+
+:root.light .bg-metallic-chrome {
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
+  border: 1.5px solid rgba(15, 23, 42, 0.1);
+}
+
+/* Pulse / Flow Animations */
+@keyframes flow-glow {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 200, 83, 0.3)); }
+  50% { filter: drop-shadow(0 0 20px rgba(0, 200, 83, 0.7)); }
+}
+
+.animate-glow-flow {
+  animation: flow-glow 4s infinite ease-in-out;
+}
+
+/* Responsive Modal Styles */
+.modal-header-gradient {
+  background-image: linear-gradient(to top, #121212 0%, rgba(24, 24, 27, 0.45) 55%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+:root.light .modal-header-gradient {
+  background-image: linear-gradient(to top, #ffffff 0%, rgba(255, 255, 255, 0.35) 60%, rgba(255, 255, 255, 0) 100%) !important;
+}
+
+.modal-backdrop-custom {
+  background-color: rgba(0, 0, 0, 0.82) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+:root.light .modal-backdrop-custom {
+  background-color: rgba(253, 251, 235, 0.75) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.modal-container-custom {
+  background-color: rgba(18, 18, 18, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fafafa !important;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8) !important;
+}
+
+:root.light .modal-container-custom {
+  background-color: #fdfbe3 !important;
+  border-color: rgba(184, 134, 11, 0.2) !important;
+  color: #20140c !important;
+  box-shadow: 0 15px 45px rgba(184, 134, 11, 0.15) !important;
+}
+
+.modal-footer-custom {
+  background-color: #121214 !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+:root.light .modal-footer-custom {
+  background-color: #f6f2d9 !important;
+  border-top: 1px solid rgba(184, 134, 11, 0.15) !important;
+}
+
+:root.light .modal-title-custom {
+  color: #20140c !important;
+}
+
+.modal-close-btn {
+  background-color: rgba(0, 0, 0, 0.52) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.modal-close-btn svg {
+  color: #ffffff !important;
+}
+
+.modal-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  transform: scale(1.05);
+}
+
+.modal-close-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* Ensure the drop shadow filter on headers doesn't look dark & muddy in light mode */
+:root.light [class*="drop-shadow-"] {
+  filter: none !important;
+}
+:root.light .drop-shadow-\[0_2px_4px_rgba\(0\,0\,0\,0\.5\)\] {
+  filter: none !important;
+}
+
+/* Force text to remain pure high-contrast white inside dark overlay panels, even in Light Mode */
+.text-white-force,
+.text-white-force * {
+  color: #ffffff !important;
+}
+
+.text-white-force-secondary,
+.text-white-force-secondary * {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Force high contrast white regardless of light-mode overrides because these names do not contain "text-white" or "text-neutral" */
+.force-high-contrast-white {
+  color: #ffffff !important;
+}
+
+.force-high-contrast-white-secondary {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+/* CUSTOM APP DESIGN IMPROVEMENTS */
+
+/* Advanced mesh gradient background for Hero Banner in BOTH Light & Dark Modes */
+.hero-orange-banner {
+  background-color: #ea580c !important;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(244, 63, 94, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(245, 158, 11, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(234, 88, 12, 0.8) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(217, 119, 6, 0.7) 0px, transparent 50%),
+    linear-gradient(135deg, #ea580c 0%, #f97316 50%, #f59e0b 100%) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 20px 40px -6px rgba(234, 88, 12, 0.4) !important;
+}
+.hero-orange-banner * {
+  color: #ffffff !important;
+}
+.hero-orange-banner .text-neutral-400 {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+.hero-orange-banner .bg-white\/15 {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+.hero-orange-banner .text-amber-300 {
+  color: #fde047 !important;
+}
+
+/* Floating stickers soft glows, strictly protecting dark-on-white contrast & backgrounds */
+.hero-sticker-orange,
+.hero-sticker-teal {
+  background-color: rgba(0, 0, 0, 0.72) !important;
+  color: #ffffff !important;
+  border-width: 1px !important;
+}
+.hero-sticker-orange *,
+.hero-sticker-teal * {
+  color: #ffffff !important;
+}
+.hero-sticker-orange {
+  border-color: rgba(249, 115, 22, 0.45) !important;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.45), 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+}
+.hero-sticker-teal {
+  border-color: rgba(20, 184, 166, 0.45) !important;
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.45), 0 10px 25px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Force the hero stickers to always keep their dark glass aesthetic and white/light text in both light and dark mode */
+:root.light .hero-sticker-orange,
+:root.light .hero-sticker-teal {
+  background-color: rgba(12, 12, 12, 0.85) !important;
+  color: #ffffff !important;
+  border-width: 1px !important;
+}
+:root.light .hero-sticker-orange *,
+:root.light .hero-sticker-teal * {
+  color: #ffffff !important;
+}
+:root.light .hero-sticker-orange {
+  border-color: rgba(249, 115, 22, 0.55) !important;
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+:root.light .hero-sticker-teal {
+  border-color: rgba(20, 184, 166, 0.55) !important;
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.4), 0 10px 25px rgba(0, 0, 0, 0.4) !important;
+}
+:root.light .hero-sticker-orange .text-rose-100 {
+  color: #ffe4e6 !important;
+}
+:root.light .hero-sticker-teal .text-teal-100 {
+  color: #ccfbf1 !important;
+}
+
+/* Beautiful Animated SVG Travel Route Line */
+@keyframes mapRouteDashAnimation {
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.animate-map-route-flow {
+  stroke-dasharray: 8 5;
+  animation: mapRouteDashAnimation 1.6s linear infinite;
+}
+
+/* Overlapping Search Bar Light Mode adjustment */
+:root.light .search-bar-container {
+  background-color: #ffffff !important;
+  border-color: rgba(234, 88, 12, 0.35) !important;
+  box-shadow: 0 12px 30px -5px rgba(234, 88, 12, 0.18), 0 4px 12px -3px rgba(0, 0, 0, 0.05) !important;
+}
+:root.light .search-bar-container input {
+  color: #20140c !important;
+}
+:root.light .search-bar-container input::placeholder {
+  color: #8c7e74 !important;
+}
+
+/* Cream background sectioning: keep Header with a cozy cream hue, body is off-white */
+:root.light header {
+  background-color: #fffef5 !important;
+  border-bottom-color: rgba(234, 88, 12, 0.08) !important;
+  box-shadow: 0 4px 15px rgba(234, 88, 12, 0.03) !important;
+}
+
+/* Tactile spot cards: Borderless with high-spread organic soft floating shadows */
+.spot-card-transition {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Light mode card design: no borders, beautiful soft wide drop gravity */
+:root.light .spot-card-transition {
+  background-color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 15px 35px -8px rgba(32, 20, 12, 0.05), 0 4px 12px -4px rgba(32, 20, 12, 0.02) !important;
+}
+:root.light .spot-card-transition:hover {
+  transform: translateY(-8px) scale(1.015) !important;
+  border: none !important;
+  box-shadow: 0 25px 45px -10px rgba(234, 88, 12, 0.12), 0 8px 20px -6px rgba(0, 0, 0, 0.03) !important;
+}
+:root.light .spot-card-transition h4 {
+  color: #20140c !important;
+}
+:root.light .spot-card-transition:hover h4 {
+  color: #e04f00 !important;
+}
+
+/* Dark mode card design: elegant neon-infused borderless soft gravity overlay */
+:root:not(.light) .spot-card-transition {
+  background-color: #121212 !important;
+  border: none !important;
+  box-shadow: 0 15px 35px -8px rgba(0, 0, 0, 0.45) !important;
+}
+:root:not(.light) .spot-card-transition:hover {
+  transform: translateY(-8px) scale(1.015) !important;
+  border: none !important;
+  box-shadow: 0 25px 45px -10px rgba(16, 185, 129, 0.18), 0 0 25px rgba(16, 185, 129, 0.05) !important;
+}
+
+/* Quick filter buttons lift in Light Mode */
+:root.light .filter-btn-hover:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.12) !important;
+}
+
+
+
+

@@ -1,0 +1,6 @@
+{
+  "name": "Cóc Food Map",
+  "description": "Bản đồ ăn uống tiết kiệm, săn deal, so sánh giá và quản lý budget dành riêng cho sinh viên quanh trường.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

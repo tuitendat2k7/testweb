@@ -4,33 +4,35 @@ import { eq } from 'drizzle-orm';
 
 export async function getOrCreateUser(uid: string, email: string, name?: string) {
   try {
+    // First, try to find the user by their UID
+    const existingUser = await db.select().from(users).where(eq(users.uid, uid)).limit(1);
+
+    if (existingUser.length > 0) {
+      // User already exists, return their profile
+      return existingUser[0];
+    }
+
+    // User does not exist, create them
     // Check if any user exists so we can set admin role for the first user
-    const existingUsers = await db.select().from(users).limit(1);
-    const isFirstUser = existingUsers.length === 0;
-    
+    const allUsers = await db.select({ id: users.id }).from(users).limit(1);
+    const isFirstUser = allUsers.length === 0;
+
     // Also set admin if the user has a specific email
     const isAdminEmail = email === 'tuitendat2k7@gmail.com';
     const role = (isFirstUser || isAdminEmail) ? 'admin' : 'student';
 
-    const result = await db.insert(users)
+    const newUser = await db.insert(users)
       .values({
         uid,
         email,
         name: name || email.split('@')[0],
         role,
       })
-      .onConflictDoUpdate({
-        target: users.uid,
-        set: {
-          email,
-          name: name || undefined,
-        },
-      })
       .returning();
 
-    return result[0];
+    return newUser[0];
   } catch (error) {
-    console.error("Database upsert user failed:", error);
+    console.error("Database getOrCreateUser failed:", error);
     throw new Error("Failed to register/sync user in SQL database.", { cause: error });
   }
 }

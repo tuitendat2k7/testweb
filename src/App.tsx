@@ -309,7 +309,7 @@ export default function App() {
 
 // Nút bấm mở thẳng Google Maps và tự động vẽ đường
   const handleDirections = (spot: Spot) => {
-    // Dùng API dẫn đường chính thức của Google Maps
+    // Dùng URL chuẩn API của Google Maps (dir = direction)
     const url = `https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };

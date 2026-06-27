@@ -598,14 +598,14 @@ export default function App() {
                         {selectedSpot.menuItems.map((item) => (
                           <div 
                              key={item.id}
-                             className="flex items-center justify-between p-3 rounded-xl bg-[#f6f2d9] dark:bg-white/5 border border-[#ebdcb8]/40 dark:border-white/5 hover:border-neutral-200 dark:hover:border-white/10 transition duration-300 shadow-sm"
+                             onClick={() => setZoomedImage(item.image || null)}
+                             className="group cursor-pointer flex items-center justify-between p-3 rounded-xl bg-[#f6f2d9] dark:bg-white/5 border border-[#ebdcb8]/40 dark:border-white/5 hover:border-emerald-400/50 dark:hover:border-white/20 transition duration-300 shadow-sm hover:shadow-md"
                           >
                             <div className="flex items-center gap-3">
                               <img 
                                 src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=100'} 
                                 alt={item.name} 
-                                onClick={() => setZoomedImage(item.image || null)}
-                                className="w-11 h-11 object-cover rounded-lg border border-neutral-200/50 dark:border-white/10 cursor-pointer hover:scale-110 transition-transform duration-300 shadow-sm"
+                                className="w-11 h-11 object-cover rounded-lg border border-neutral-200/50 dark:border-white/10 transition-transform duration-300 shadow-sm group-hover:scale-110"
                               />
                               <div>
                                 <h5 className="font-bold text-neutral-800 dark:text-neutral-200 text-xs leading-snug">{item.name}</h5>

@@ -39,7 +39,7 @@ async function initTablesAndSeed() {
   }
 
   try {
-    await seedDatabase();
+    //await seedDatabase();
   } catch (err) {
     console.error("Failed to seed database on startup:", err);
   }

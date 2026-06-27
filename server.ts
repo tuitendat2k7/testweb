@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import path from 'path';
 import * as dotenv from 'dotenv';
 import { createServer as createViteServer } from 'vite';
@@ -120,7 +120,15 @@ app.post('/api/sync-sheet', async (req, res) => {
         const priceRange = entry[8] || '20k-50k';
         const itemName = entry[9];
         const itemPrice = parseInt(entry[10], 10) || 0;
-        const itemImage = entry[11] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400';
+        let itemImage = entry[11] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=400';
+
+        // Tự động bóc tách ID và chuyển đổi link Google Drive sang Direct Link
+        if (itemImage.includes('drive.google.com/file/d/')) {
+          const match = itemImage.match(/\/d\/([a-zA-Z0-9-_]+)/);
+          if (match && match[1]) {
+            itemImage = `https://drive.google.com/uc?export=view&id=${match[1]}`;
+          }
+        }
 
         if (!spotName) continue;
 

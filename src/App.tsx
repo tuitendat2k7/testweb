@@ -443,9 +443,10 @@ export default function App() {
                 <div className="relative w-full md:w-[42%] h-56 sm:h-64 md:h-full flex-shrink-0 flex flex-col justify-end p-5 sm:p-6 md:p-8 overflow-hidden">
                   {/* Background Cover Photo */}
                   <div className="absolute inset-0 z-0">
-                    {selectedSpot.menuItems && selectedSpot.menuItems.length > 0 && selectedSpot.menuItems[0].image ? (
+                    {selectedSpot.menuItems && selectedSpot.menuItems.length > 0 && selectedSpot.menuItems[currentImageIndex].image ? (
                       <img 
-                        src={selectedSpot.menuItems[0].image} 
+                        key={currentImageIndex}
+                        src={selectedSpot.menuItems[currentImageIndex].image} 
                         alt={selectedSpot.name} 
                         className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.03]"
                       />

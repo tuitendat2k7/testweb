@@ -347,7 +347,7 @@ export default function AdminPanel({ user, profile, spots, onRefreshSpots, onRef
 
         <div className="text-center pt-2">
           <p className="text-[10px] text-neutral-500 font-bold uppercase tracking-wider">
-            💡 Gợi ý thử: Tên: <span className="text-[#5eff90] font-mono">admin</span> | MK: <span className="text-[#5eff90] font-mono">fptadmin2026</span>
+            💡 Liên hệ ADMIN để truy cập <span className="text-[#5eff90] font-mono"></span> <span className="text-[#5eff90] font-mono"></span>
           </p>
         </div>
       </div>

@@ -424,6 +424,7 @@ app.delete('/api/spots/:id', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // 9. API: Add a menu item to spot
+// 9. API: Add a menu item to spot
 app.post('/api/spots/:spotId/menu-items', requireAuth, async (req: AuthRequest, res) => {
   try {
     const uid = req.user?.uid;
@@ -435,11 +436,22 @@ app.post('/api/spots/:spotId/menu-items', requireAuth, async (req: AuthRequest, 
     }
 
     const spotId = parseInt(req.params.spotId, 10);
-    const { name, price, image, isPopular } = req.body;
+    // Đổi const thành let để có thể sửa lại link ảnh
+    let { name, price, image, isPopular } = req.body;
 
     if (!name || !price) {
       return res.status(400).json({ error: "Item name and price are required" });
     }
+
+    // --- BỘ LỌC TỰ ĐỘNG ĐỔI LINK ẢNH GOOGLE DRIVE TỪ FORM ---
+    if (image && image.includes('drive.google.com/file/d/')) {
+      const match = image.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      if (match && match[1]) {
+        // Dùng API thumbnail để né 100% lỗi CORS của Google
+        image = `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+      }
+    }
+    // ---------------------------------------------------------
 
     const newItem = await db.insert(menuItems).values({
       spotId,

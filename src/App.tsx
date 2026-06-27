@@ -53,7 +53,8 @@ export default function App() {
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
-
+// --- State cho tính năng phóng to ảnh thực đơn ---
+  const [zoomedImage, setZoomedImage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'home' | 'deals' | 'budget' | 'map' | 'admin'>('home');
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -603,7 +604,8 @@ export default function App() {
                               <img 
                                 src={item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=100'} 
                                 alt={item.name} 
-                                className="w-11 h-11 object-cover rounded-lg border border-neutral-200/50 dark:border-white/10"
+                                onClick={() => setZoomedImage(item.image || null)}
+                                className="w-11 h-11 object-cover rounded-lg border border-neutral-200/50 dark:border-white/10 cursor-pointer hover:scale-110 transition-transform duration-300 shadow-sm"
                               />
                               <div>
                                 <h5 className="font-bold text-neutral-800 dark:text-neutral-200 text-xs leading-snug">{item.name}</h5>
@@ -671,7 +673,44 @@ export default function App() {
           </div>
         )}
       </AnimatePresence>
-
+        {/* Lightbox / Zoomed Image Modal (Hiển thị khi bấm vào ảnh món) */}
+      <AnimatePresence>
+        {zoomedImage && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6" onClick={() => setZoomedImage(null)}>
+            {/* Lớp mờ nền đen */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/90 backdrop-blur-md cursor-zoom-out"
+            />
+            
+            {/* Ảnh phóng to */}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative z-10 flex flex-col items-center"
+              onClick={(e) => e.stopPropagation()} // Tránh click nhầm vào ảnh bị đóng
+            >
+              {/* Nút X để tắt (nằm ở góc trên bên phải ảnh) */}
+              <button 
+                onClick={() => setZoomedImage(null)}
+                className="absolute -top-12 right-0 w-10 h-10 bg-white/10 hover:bg-white/25 border border-white/20 text-white rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 cursor-pointer shadow-lg hover:rotate-90"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <img 
+                src={zoomedImage} 
+                alt="Zoomed menu item" 
+                className="w-auto h-auto max-w-full max-h-[85vh] rounded-xl shadow-[0_0_40px_rgba(0,0,0,0.5)] object-contain border border-white/10"
+              />
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

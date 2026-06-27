@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { useState, useEffect } from 'react';
 import Header from './components/Header.tsx';
 import CocLogo from './components/CocLogo.tsx';
@@ -26,7 +27,9 @@ import {
   AlertTriangle,
   Gift,
   ChevronsRight,
-  ArrowRight
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -63,24 +66,46 @@ export default function App() {
 
   // Selected Spot Modal / Showcase Details
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
-  // --- BẮT ĐẦU THÊM MỚI: Bộ đếm tự động lướt ảnh ---
+  // --- BẮT ĐẦU THÊM MỚI: Trình phát ảnh xịn xò ---
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const resumeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Hiệu ứng tự động lướt 1.5s
   useEffect(() => {
-    // Nếu chưa chọn quán, hoặc quán không có món nào, hoặc chỉ có 1 món thì đứng im
-    if (!selectedSpot || !selectedSpot.menuItems || selectedSpot.menuItems.length <= 1) {
-      setCurrentImageIndex(0);
+    // Nếu đang tạm dừng hoặc không có đủ ảnh thì đứng im
+    if (!selectedSpot || !selectedSpot.menuItems || selectedSpot.menuItems.length <= 1 || isPaused) {
       return;
     }
 
-    // Cứ mỗi 1000ms (1 giây) thì đổi sang ảnh của món tiếp theo
     const timer = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedSpot.menuItems!.length);
-    }, 1000); // Bạn có thể đổi 1000 thành 2000 (2 giây) nếu thấy nó nháy nhanh quá nhé!
+      setCurrentImageIndex((prev) => (prev + 1) % selectedSpot.menuItems!.length);
+    }, 1500);
 
-    // Dọn dẹp đồng hồ khi đóng bảng chi tiết
     return () => clearInterval(timer);
-  }, [selectedSpot]);
+  }, [selectedSpot, isPaused]);
+
+  // Hàm xử lý khi bấm nút thủ công
+  const handleManualNav = (direction: 'prev' | 'next') => {
+    if (!selectedSpot?.menuItems) return;
+    
+    setIsPaused(true); // Tắt tự động lướt
+
+    // Đổi ảnh theo hướng bấm
+    setCurrentImageIndex((prev) => {
+      const length = selectedSpot.menuItems!.length;
+      if (direction === 'next') return (prev + 1) % length;
+      return (prev - 1 + length) % length; // Vòng lại ảnh cuối
+    });
+
+    // Hủy đồng hồ cũ (để tránh bấm liên tục bị lỗi)
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+
+    // Hẹn giờ đúng 3 giây sau không ai bấm thì chạy tự động lại
+    resumeTimerRef.current = setTimeout(() => {
+      setIsPaused(false);
+    }, 3000);
+  };
   // --- KẾT THÚC THÊM MỚI ---
   // Fetch Spots and Deals
   const fetchspotsAndDeals = async () => {
@@ -443,16 +468,40 @@ export default function App() {
                 <div className="relative w-full md:w-[42%] h-56 sm:h-64 md:h-full flex-shrink-0 flex flex-col justify-end p-5 sm:p-6 md:p-8 overflow-hidden">
                   {/* Background Cover Photo */}
                   <div className="absolute inset-0 z-0">
-                    {selectedSpot.menuItems && selectedSpot.menuItems.length > 0 && selectedSpot.menuItems[currentImageIndex].image ? (
-                      <img 
-                        key={currentImageIndex}
-                        src={selectedSpot.menuItems[currentImageIndex].image} 
-                        alt={selectedSpot.name} 
-                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.03]"
-                      />
+                    {selectedSpot.menuItems && selectedSpot.menuItems.length > 0 && selectedSpot.menuItems[currentImageIndex]?.image ? (
+                      <AnimatePresence mode="popLayout">
+                        <motion.img 
+                          key={currentImageIndex}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.6, ease: "easeInOut" }}
+                          src={selectedSpot.menuItems[currentImageIndex].image} 
+                          alt={selectedSpot.name} 
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1500ms] hover:scale-[1.03]"
+                        />
+                      </AnimatePresence>
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-tr from-[#ebdcb8] via-[#f7f2cb] to-[#ebdcb8] dark:from-emerald-950 dark:via-teal-950 dark:to-emerald-950 flex items-center justify-center text-[#20140c] dark:text-white text-5xl">
+                      <div className="w-full h-full bg-gradient-to-tr from-[#ebdcb8] via-[#f7f2cb] to-[#ebdcb8] flex items-center justify-center text-5xl">
                         🍲
+                      </div>
+                    )}
+                    
+                    {/* Bảng điều khiển thủ công (Sẽ hiện ra khi di chuột vào ảnh) */}
+                    {selectedSpot.menuItems && selectedSpot.menuItems.length > 1 && (
+                      <div className="absolute inset-0 z-20 flex items-center justify-between px-2 sm:px-4 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleManualNav('prev'); }} 
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/40 border border-white/20 text-white flex items-center justify-center hover:bg-black/70 hover:scale-110 transition backdrop-blur-md cursor-pointer shadow-lg"
+                        >
+                          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 ml-[-2px]"/>
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleManualNav('next'); }} 
+                          className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/40 border border-white/20 text-white flex items-center justify-center hover:bg-black/70 hover:scale-110 transition backdrop-blur-md cursor-pointer shadow-lg"
+                        >
+                          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 mr-[-2px]"/>
+                        </button>
                       </div>
                     )}
                     {/* Premium multi-layered dark gradient mask to guarantee white title text readability regardless of background image luminosity */}

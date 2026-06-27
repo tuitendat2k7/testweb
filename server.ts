@@ -403,6 +403,7 @@ app.post('/api/spots', requireAuth, async (req: AuthRequest, res) => {
 });
 
 // 8. API: Delete Spot
+// 8. API: Delete Spot
 app.delete('/api/spots/:id', requireAuth, async (req: AuthRequest, res) => {
   try {
     const uid = req.user?.uid;
@@ -414,6 +415,17 @@ app.delete('/api/spots/:id', requireAuth, async (req: AuthRequest, res) => {
     }
 
     const spotId = parseInt(req.params.id, 10);
+
+    // --- BẮT ĐẦU FIX: Dọn sạch "đồ đạc" trước khi xóa "nhà" ---
+    // Xóa các món ăn thuộc về quán này
+    await db.delete(menuItems).where(eq(menuItems.spotId, spotId));
+    // Xóa các deal khuyến mãi thuộc về quán này
+    await db.delete(deals).where(eq(deals.spotId, spotId));
+    // Xóa các bình luận đánh giá thuộc về quán này (Dùng lệnh SQL thô vì reviews ko nằm trong schema)
+    await db.execute(sql`DELETE FROM reviews WHERE spot_id = ${spotId}`);
+    // -----------------------------------------------------------
+
+    // Khi đã dọn sạch, tiến hành xóa Quán
     await db.delete(spots).where(eq(spots.id, spotId));
 
     res.json({ message: "Spot and related details deleted successfully" });

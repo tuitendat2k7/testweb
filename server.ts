@@ -367,6 +367,7 @@ app.post('/api/profile/demote-admin', requireAuth, async (req: AuthRequest, res)
 });
 
 // 7. API: Add a new Spot (Restricted to Admin - for safety we check role in DB)
+// 7. API: Add a new Spot (Restricted to Admin - for safety we check role in DB)
 app.post('/api/spots', requireAuth, async (req: AuthRequest, res) => {
   try {
     const uid = req.user?.uid;
@@ -377,10 +378,38 @@ app.post('/api/spots', requireAuth, async (req: AuthRequest, res) => {
       return res.status(403).json({ error: "Forbidden: Admin privileges required" });
     }
 
-    const { name, description, category, address, school, lat, lng, wifi, studySpot, priceRange } = req.body;
-    if (!name || !category || !address || lat === undefined || lng === undefined) {
-      return res.status(400).json({ error: "Missing missing fields (name, category, address, lat, lng)" });
+    const { name, description, category, address, school, wifi, studySpot, priceRange } = req.body;
+    let { lat, lng } = req.body; // Đổi const thành let để có thể tự động gán tọa độ
+
+    if (!name || !category || !address) {
+      return res.status(400).json({ error: "Missing required fields (name, category, address)" });
     }
+
+    // --- BỘ LỌC TỰ ĐỘNG CHUYỂN ĐỊA CHỈ THÀNH TỌA ĐỘ ---
+    // Nếu Frontend không gửi tọa độ lên, Backend sẽ tự đi tìm!
+    if (!lat || !lng) {
+      try {
+        // Gọi API miễn phí của OpenStreetMap để dò tọa độ
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`, {
+          headers: { 'User-Agent': 'CocFoodMap/1.0' } // Bắt buộc phải có User-Agent để API không block
+        });
+        const geoData = await geoRes.json();
+        
+        if (geoData && geoData.length > 0) {
+          lat = parseFloat(geoData[0].lat);
+          lng = parseFloat(geoData[0].lon); // OpenStreetMap dùng 'lon' thay vì 'lng'
+        } else {
+          // Tọa độ dự phòng nếu API tìm không ra (Cắm tạm ở cơ sở Ngũ Hành Sơn)
+          lat = 15.9688;
+          lng = 108.2618;
+        }
+      } catch (err) {
+        console.error("Geocoding failed:", err);
+        lat = 15.9688;
+        lng = 108.2618;
+      }
+    }
+    // --------------------------------------------------
 
     const newSpot = await db.insert(spots).values({
       name,

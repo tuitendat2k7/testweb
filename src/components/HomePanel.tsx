@@ -79,7 +79,21 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               Hệ sinh thái thông tin ẩm thực bản đồ thu nhỏ, tích hợp công cụ kiểm duyệt chi phí, đồng bộ dữ liệu thời gian thực giúp học bối FPT nâng tầm sinh tồn chất lượng cao.
             </p>
 
-            
+            <div className="pt-1.5 flex flex-wrap gap-3">
+              <div className="flex items-center gap-1.5 text-xs text-white/90 font-bold bg-white/10 py-1 px-2.5 rounded-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" />
+                <span></span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-white/90 font-bold bg-white/10 py-1 px-2.5 rounded-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-300 animate-pulse" />
+                <span></span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-white/90 font-bold bg-white/10 py-1 px-2.5 rounded-lg">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                <span></span>
+              </div>
+            </div>
+          </div>
 
           {/* Right side interactive vector grid mockup */}
           <div className="h-44 w-full md:w-[40%] relative hidden md:flex items-center justify-center pointer-events-none select-none overflow-visible">

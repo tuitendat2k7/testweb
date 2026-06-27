@@ -80,9 +80,6 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
             </p>
 
             
-              </div>
-            </div>
-          </div>
 
           {/* Right side interactive vector grid mockup */}
           <div className="h-44 w-full md:w-[40%] relative hidden md:flex items-center justify-center pointer-events-none select-none overflow-visible">

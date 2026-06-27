@@ -307,12 +307,12 @@ export default function App() {
     }
   };
 
-  // Safe direction links
+// Nút bấm mở thẳng Google Maps và tự động vẽ đường
   const handleDirections = (spot: Spot) => {
+    // Dùng API dẫn đường chính thức của Google Maps
     const url = `https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`;
-    window.open(url, '_blank', 'referrerPolicy=no-referrer');
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
-
   return (
     <div className="min-h-screen bg-[#080808] flex flex-col font-sans select-none antialiased text-neutral-100">
       

@@ -308,9 +308,10 @@ export default function App() {
   };
 
 // Nút bấm mở thẳng Google Maps và tự động vẽ đường
+// Nút bấm mở thẳng Google Maps và cắm ghim tọa độ
   const handleDirections = (spot: Spot) => {
-    // URL chuẩn API dẫn đường của Google Maps
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${spot.lat},${spot.lng}`;
+    // URL chuẩn API tìm kiếm tọa độ của Google Maps
+    const url = `https://www.google.com/maps/search/?api=1&query=${spot.lat},${spot.lng}`;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
   return (

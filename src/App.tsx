@@ -63,7 +63,25 @@ export default function App() {
 
   // Selected Spot Modal / Showcase Details
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+  // --- BẮT ĐẦU THÊM MỚI: Bộ đếm tự động lướt ảnh ---
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
+  useEffect(() => {
+    // Nếu chưa chọn quán, hoặc quán không có món nào, hoặc chỉ có 1 món thì đứng im
+    if (!selectedSpot || !selectedSpot.menuItems || selectedSpot.menuItems.length <= 1) {
+      setCurrentImageIndex(0);
+      return;
+    }
+
+    // Cứ mỗi 1000ms (1 giây) thì đổi sang ảnh của món tiếp theo
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedSpot.menuItems!.length);
+    }, 1000); // Bạn có thể đổi 1000 thành 2000 (2 giây) nếu thấy nó nháy nhanh quá nhé!
+
+    // Dọn dẹp đồng hồ khi đóng bảng chi tiết
+    return () => clearInterval(timer);
+  }, [selectedSpot]);
+  // --- KẾT THÚC THÊM MỚI ---
   // Fetch Spots and Deals
   const fetchspotsAndDeals = async () => {
     setLoadingSpots(true);

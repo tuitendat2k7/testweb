@@ -433,7 +433,7 @@ export default function App() {
       {/* Footer credits in layout */}
       <footer className="bg-black/30 border-t border-white/5 py-8 text-center text-xs text-neutral-500 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-1.5 font-medium">
-          <p>© 2026 Cóc Food Map 💸.For more information: IG: vies.dat</p>
+          <p>© 2026 Cóc Food Map 💸.</p>
           <p className="text-neutral-600 text-[10px] uppercase tracking-widest font-bold">
             
           </p>

@@ -307,14 +307,25 @@ export default function App() {
     }
   };
 
-// Nút bấm mở thẳng Google Maps và tự động vẽ đường
+
+  // ... (code cũ ở trên)
   const handleDirections = (spot: Spot) => {
-    // Ép Google Maps tự tìm bằng Tên Quán + Địa chỉ (bỏ qua Lat/Lng sai số)
     const query = `${spot.name}, ${spot.address}`;
     const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
-    
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+
+  // --- BẮT ĐẦU THÊM MỚI ---
+  // Hàm này đảm bảo luôn lấy "bản Full" của quán (có menu) để hiển thị Modal
+  const handleOpenSpotDetails = (clickedSpot: Spot) => {
+    // Tìm trong kho spots xem có quán nào trùng ID không, nếu có thì lấy bản full đó
+    const fullSpotData = spots.find(s => s.id === clickedSpot.id) || clickedSpot;
+    setSelectedSpot(fullSpotData);
+  };
+  // --- KẾT THÚC THÊM MỚI ---
+
+  return (
+    <div className="min-h-screen bg-[#080808] flex flex-col font-sans select-none antialiased text-neutral-100"></div>
   return (
     <div className="min-h-screen bg-[#080808] flex flex-col font-sans select-none antialiased text-neutral-100">
       
@@ -388,7 +399,7 @@ export default function App() {
                 <HomePanel 
                   spots={spots} 
                   deals={deals} 
-                  onSelectSpot={(spot) => setSelectedSpot(spot)} 
+                  onSelectSpot={handleOpenSpotDetails} 
                   onNavigateToDeals={() => setActiveTab('deals')}
                   onNavigateToBudget={() => setActiveTab('budget')}
                 />
@@ -397,7 +408,7 @@ export default function App() {
                 <DealsPanel 
                   spots={spots} 
                   deals={deals} 
-                  onSelectSpot={(spot) => setSelectedSpot(spot)} 
+                  onSelectSpot={handleOpenSpotDetails} 
                 />
               )}
               {activeTab === 'budget' && (
@@ -406,7 +417,7 @@ export default function App() {
               {activeTab === 'map' && (
                 <MapPanel 
                   spots={spots} 
-                  onSelectSpot={(spot) => setSelectedSpot(spot)} 
+                  onSelectSpot={handleOpenSpotDetails} 
                 />
               )}
               {activeTab === 'admin' && (
@@ -429,9 +440,9 @@ export default function App() {
       {/* Footer credits in layout */}
       <footer className="bg-black/30 border-t border-white/5 py-8 text-center text-xs text-neutral-500 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-1.5 font-medium">
-          <p>© 2026 Cóc Food Map 💸. Được tâm huyết thiết kế bởi Sinh Viên, Cho Sinh Viên FPT.</p>
+          <p>© 2026 Cóc Food Map 💸.For more information: IG: vies.dat</p>
           <p className="text-neutral-600 text-[10px] uppercase tracking-widest font-bold">
-            Hiệu năng vượt trội • Bản đồ vệ tinh số hóa • Công cụ sinh tồn thông minh
+            
           </p>
         </div>
       </footer>

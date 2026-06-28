@@ -324,8 +324,7 @@ export default function App() {
   };
   // --- KẾT THÚC THÊM MỚI ---
 
-  return (
-    <div className="min-h-screen bg-[#080808] flex flex-col font-sans select-none antialiased text-neutral-100"></div>
+
   return (
     <div className="min-h-screen bg-[#080808] flex flex-col font-sans select-none antialiased text-neutral-100">
       

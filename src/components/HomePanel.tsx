@@ -16,12 +16,21 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-  // Filter spots
+// Filter spots
   const filteredSpots = spots.filter(spot => {
-    const matchesSearch = spot.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          (spot.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          spot.address.toLowerCase().includes(searchQuery.toLowerCase());
+    const query = searchQuery.toLowerCase();
+    
+    // Quét Tên quán HOẶC Mô tả HOẶC Địa chỉ HOẶC Tên món ăn trong thực đơn
+    const matchesSearch = 
+      spot.name.toLowerCase().includes(query) ||
+      (spot.description || '').toLowerCase().includes(query) ||
+      spot.address.toLowerCase().includes(query) ||
+      (spot.menuItems?.some(item => item.name.toLowerCase().includes(query)));
+
+    // Quét Danh mục (Đồ ăn, Trà sữa...)
     const matchesCat = selectedCategory === 'all' || spot.category === selectedCategory;
+    
+    // Quán phải thỏa mãn cả Từ khóa tìm kiếm VÀ Danh mục đang chọn
     return matchesSearch && matchesCat;
   });
 

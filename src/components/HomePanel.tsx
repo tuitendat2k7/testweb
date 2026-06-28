@@ -202,13 +202,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               <Flame className="text-orange-500 w-5 h-5 inline" />
               Săn Deal Hot Hôm Nay 🔥
             </h3>
-            <button 
-              onClick={onNavigateToDeals}
-              id="view-all-deals-btn"
-              className="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-0.5"
-            >
-              <span>Xem tất cả ({deals.length})</span>
-            </button>
+            
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

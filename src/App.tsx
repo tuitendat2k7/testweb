@@ -399,17 +399,11 @@ export default function App() {
                   spots={spots} 
                   deals={deals} 
                   onSelectSpot={handleOpenSpotDetails} 
-                  onNavigateToDeals={() => setActiveTab('deals')}
+                  
                   onNavigateToBudget={() => setActiveTab('budget')}
                 />
               )}
-              {activeTab === 'deals' && (
-                <DealsPanel 
-                  spots={spots} 
-                  deals={deals} 
-                  onSelectSpot={handleOpenSpotDetails} 
-                />
-              )}
+              
               {activeTab === 'budget' && (
                 <BudgetPanel />
               )}

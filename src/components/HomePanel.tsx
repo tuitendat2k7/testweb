@@ -48,11 +48,20 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     setShowSmartModal(true); // Hiện bảng Gợi ý
   };
 
-  // Bộ lọc tìm kiếm cũ giữ nguyên...
-  const filteredSpots = spots.filter(spot => { //...
+  // Bộ lọc tìm kiếm đã được khôi phục
+  const filteredSpots = spots.filter(spot => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = 
+      spot.name.toLowerCase().includes(query) ||
+      (spot.description || '').toLowerCase().includes(query) ||
+      spot.address.toLowerCase().includes(query) ||
+      (spot.menuItems?.some(item => item.name.toLowerCase().includes(query)));
+
+    const matchesCat = selectedCategory === 'all' || spot.category === selectedCategory;
+    return matchesSearch && matchesCat;
+  });
   
   const containerVariants = {
-
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -194,6 +203,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           />
         </div>
       </div>
+
       {/* KHU VỰC NÚT BẤM VÀ TOOLTIP */}
       <div className="flex justify-center my-8 relative z-40">
         <div className="relative flex flex-col items-center">
@@ -218,6 +228,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           </button>
         </div>
       </div>
+
       {/* Filters List */}
       <div className="pt-2">
         <div className="flex flex-wrap gap-2 justify-start sm:justify-center">
@@ -251,7 +262,6 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               <Flame className="text-orange-500 w-5 h-5 inline" />
               Săn Deal Hot Hôm Nay 🔥
             </h3>
-            
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -268,7 +278,6 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
                 }}
                 className="relative overflow-hidden p-4 rounded-2xl glass-panel border border-orange-500/20 text-white hover:border-orange-500/40 transition-all duration-300 cursor-pointer flex items-start gap-4 hover:shadow-[0_4px_20px_rgba(249,115,22,0.1)]"
               >
-                {/* Visual perspective highlight */}
                 <div className="w-11 h-11 bg-orange-500/10 rounded-xl flex items-center justify-center text-orange-400 font-bold flex-shrink-0 border border-orange-500/20">
                   🎟️
                 </div>
@@ -321,9 +330,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
                 className="glass-panel rounded-2xl border border-white/5 overflow-hidden hover:border-emerald-500/30 shadow-2xl cursor-pointer flex flex-col justify-between group spot-card-transition"
               >
                 <div>
-                  {/* Category Thumbnail / Illustration */}
                   <div className="h-36 bg-neutral-900 relative overflow-hidden">
-                    {/* Clean dark shadow gradient safeguarding text readability */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent z-10" />
                     
                     {spot.menuItems && spot.menuItems.length > 0 && spot.menuItems[0].image ? (
@@ -388,7 +395,8 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           </div>
         )}
       </div>
-        {/* POPUP KẾT QUẢ CÓC CHỌN */}
+
+      {/* POPUP KẾT QUẢ CÓC CHỌN */}
       {showSmartModal && smartData && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <motion.div 

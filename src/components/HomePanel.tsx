@@ -406,68 +406,65 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
         )}
       </div>
 
-      {/* POPUP KẾT QUẢ CÓC CHỌN */}
+{/* POPUP KẾT QUẢ CÓC CHỌN */}
       {showSmartModal && smartData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
           <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            // Chỉnh nền: Mặc định là trắng, khi có class dark thì chuyển sang màu tối
-            className="bg-white dark:bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl transition-colors duration-300"
+            className="bg-white dark:bg-[#1A1A1A] w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-gray-200 dark:border-white/10"
           >
-            {/* Header: Giữ nguyên màu cam nổi bật, dùng text-white để luôn rõ nét */}
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-center relative overflow-hidden">
-              <h3 className="text-white font-bold text-lg mb-1 relative z-10">Kết Quả Phân Tích</h3>
-              <div className="flex justify-center items-center gap-4 text-orange-50 text-sm font-semibold relative z-10">
+            {/* Header: Màu cam nổi bật */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-6 text-center">
+              <h3 className="text-white font-bold text-lg">Kết Quả Phân Tích</h3>
+              <div className="flex justify-center items-center gap-3 text-orange-50 text-xs font-medium mt-1">
                 <span>🕒 {smartData.timeStr}</span>
                 <span>•</span>
                 <span>🌡️ {smartData.temp}°C</span>
               </div>
             </div>
 
-            {/* Content Gợi ý */}
-            <div className="p-6 space-y-5">
-              <p className="text-center text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors">
+            {/* Content: Nền trắng chữ đen (Light) / Nền tối chữ trắng (Dark) */}
+            <div className="p-6 space-y-4">
+              <p className="text-center text-gray-700 dark:text-gray-300 text-sm">
                 {smartData.temp > 32 
                   ? "Trời đang khá nóng bức, Cóc gợi ý bạn combo giải nhiệt cực đã này:" 
                   : "Thời tiết hiện tại cực kỳ lý tưởng để thưởng thức combo này:"}
               </p>
 
-              {/* Món Ăn Chính: Đổi nền linh hoạt giữa xám nhẹ và tối */}
+              {/* Món Chính */}
               {smartData.food && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.food!); }}
-                  className="bg-gray-50 dark:bg-white/5 border border-orange-200 dark:border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-500/10 transition"
+                  className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-500/10 transition"
                 >
-                  <div className="w-14 h-14 bg-orange-100 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🍲</div>
+                  <div className="w-12 h-12 bg-orange-200 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-2xl">🍲</div>
                   <div>
-                    <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest">Món Chính</span>
-                    <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.food.name}</h4>
-                    <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.food.address}</p>
+                    <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase">Món Chính</span>
+                    <h4 className="text-gray-900 dark:text-white font-bold text-sm">{smartData.food.name}</h4>
                   </div>
                 </div>
               )}
 
-              {/* Thức Uống Kèm */}
+              {/* Tráng Miệng */}
               {smartData.drink && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.drink!); }}
-                  className="bg-indigo-50 dark:bg-white/5 border border-indigo-200 dark:border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-500/10 transition"
+                  className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition"
                 >
-                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🥤</div>
+                  <div className="w-12 h-12 bg-indigo-200 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center text-2xl">🥤</div>
                   <div>
-                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Tráng Miệng</span>
-                    <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.drink.name}</h4>
-                    <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.drink.address}</p>
+                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase">Tráng Miệng</span>
+                    <h4 className="text-gray-900 dark:text-white font-bold text-sm">{smartData.drink.name}</h4>
                   </div>
                 </div>
               )}
 
               <button 
                 onClick={() => setShowSmartModal(false)}
-                className="w-full mt-2 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/20 text-gray-800 dark:text-white py-3 rounded-xl font-bold transition"
+                className="w-full bg-gray-200 dark:bg-white/10 text-gray-800 dark:text-white py-3 rounded-xl font-bold hover:bg-gray-300 dark:hover:bg-white/20 transition"
               >
-                Tắt
+                Đóng
               </button>
             </div>
           </motion.div>

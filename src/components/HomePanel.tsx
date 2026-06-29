@@ -11,15 +11,11 @@ interface HomePanelProps {
   onNavigateToDeals: () => void;
   onNavigateToBudget: () => void;
 }
-
 export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeals, onNavigateToBudget }: HomePanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
-// Filter spots
-  const filteredSpots = spots.filter(spot => {
-    const query = searchQuery.toLowerCase();
-    // Hàm nhặt random quán ăn
+  // 1. Hàm nhặt random quán ăn (PHẢI NẰM NGOÀI FILTER CHỖ NÀY)
   const handleRandomPick = () => {
     // Nếu chưa có data thì bỏ qua
     if (!spots || spots.length === 0) {
@@ -37,6 +33,10 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     }
   };
 
+  // 2. Filter spots (Bộ lọc tìm kiếm)
+  const filteredSpots = spots.filter(spot => {
+    const query = searchQuery.toLowerCase();
+    
     // Quét Tên quán HOẶC Mô tả HOẶC Địa chỉ HOẶC Tên món ăn trong thực đơn
     const matchesSearch = 
       spot.name.toLowerCase().includes(query) ||
@@ -50,6 +50,11 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     // Quán phải thỏa mãn cả Từ khóa tìm kiếm VÀ Danh mục đang chọn
     return matchesSearch && matchesCat;
   });
+
+  // Framer Motion Stagger config
+  const containerVariants = {
+// ... (GIỮ NGUYÊN TOÀN BỘ PHẦN CODE BÊN DƯỚI TỪ CHỖ NÀY ĐI)
+
 
   // Framer Motion Stagger config
   const containerVariants = {

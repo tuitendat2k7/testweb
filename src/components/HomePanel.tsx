@@ -90,10 +90,11 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     <div className="space-y-6 pb-16">
       
       {/* Hero Core Philosophy Banner */}
-      <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="bg-white text-gray-900 w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative overflow-hidden rounded-3xl text-white p-6 sm:p-8 md:p-10 hero-orange-banner"
       >
         {/* Subtle patterned overlay or line-art mesh */}
         <div className="absolute inset-0 opacity-[0.08] mix-blend-overlay pointer-events-none bg-[radial-gradient(#fff_1.5px,transparent_1.5px)] [background-size:24px_24px]" />

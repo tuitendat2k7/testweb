@@ -412,38 +412,36 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            // Chỗ này tự động đổi nền: Trắng (Light) và Đen (Dark)
-            className="bg-white dark:bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl"
+            // Chỉnh nền: Mặc định là trắng, khi có class dark thì chuyển sang màu tối
+            className="bg-white dark:bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl transition-colors duration-300"
           >
-            {/* Header Thời tiết (Màu Cam của bạn) */}
+            {/* Header: Giữ nguyên màu cam nổi bật, dùng text-white để luôn rõ nét */}
             <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-center relative overflow-hidden">
-              <div className="absolute right-[-20px] top-[-20px] text-8xl opacity-10">🌤️</div>
               <h3 className="text-white font-bold text-lg mb-1 relative z-10">Kết Quả Phân Tích</h3>
               <div className="flex justify-center items-center gap-4 text-orange-50 text-sm font-semibold relative z-10">
-                <span className="flex items-center gap-1">🕒 {smartData.timeStr}</span>
+                <span>🕒 {smartData.timeStr}</span>
                 <span>•</span>
-                <span className="flex items-center gap-1">🌡️ Nhiệt độ: {smartData.temp}°C</span>
+                <span>🌡️ {smartData.temp}°C</span>
               </div>
             </div>
 
             {/* Content Gợi ý */}
             <div className="p-6 space-y-5">
-              <p className="text-center text-gray-600 dark:text-neutral-300 text-sm font-medium">
+              <p className="text-center text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors">
                 {smartData.temp > 32 
                   ? "Trời đang khá nóng bức, Cóc gợi ý bạn combo giải nhiệt cực đã này:" 
                   : "Thời tiết hiện tại cực kỳ lý tưởng để thưởng thức combo này:"}
               </p>
 
-              {/* Món Ăn Chính */}
+              {/* Món Ăn Chính: Đổi nền linh hoạt giữa xám nhẹ và tối */}
               {smartData.food && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.food!); }}
-                  className="bg-orange-50 dark:bg-white/5 border border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-500/10 transition"
+                  className="bg-gray-50 dark:bg-white/5 border border-orange-200 dark:border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-500/10 transition"
                 >
                   <div className="w-14 h-14 bg-orange-100 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🍲</div>
                   <div>
                     <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest">Món Chính</span>
-                    {/* Tự động đổi màu chữ Tên Quán */}
                     <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.food.name}</h4>
                     <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.food.address}</p>
                   </div>
@@ -454,16 +452,11 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               {smartData.drink && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.drink!); }}
-                  className="bg-indigo-50 dark:bg-white/5 border border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-500/10 transition relative"
+                  className="bg-indigo-50 dark:bg-white/5 border border-indigo-200 dark:border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-500/10 transition"
                 >
-                  {/* Badge cắt ngang viền */}
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white dark:bg-[#1A1A1A] px-2 text-indigo-600 dark:text-indigo-400 text-xs font-bold transition-colors">
-                    Ăn xong uống thêm
-                  </div>
                   <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🥤</div>
                   <div>
                     <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Tráng Miệng</span>
-                    {/* Tự động đổi màu chữ Tên Quán */}
                     <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.drink.name}</h4>
                     <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.drink.address}</p>
                   </div>
@@ -479,6 +472,4 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
             </div>
           </motion.div>
         </div>
-      )}</div>
-  );
-}
+      )}

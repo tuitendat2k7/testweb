@@ -59,7 +59,18 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     setShowTooltip(false); // Ẩn lời mời đi sau khi đã bấm
     setShowSmartModal(true); // Hiện bảng Gợi ý
   };
-  
+  // BẮT ĐẦU CHÈN TỪ ĐÂY: Khôi phục lại bộ lọc tìm kiếm
+  const filteredSpots = spots.filter(spot => {
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = 
+      spot.name.toLowerCase().includes(query) ||
+      (spot.description || '').toLowerCase().includes(query) ||
+      spot.address.toLowerCase().includes(query) ||
+      (spot.menuItems?.some(item => item.name.toLowerCase().includes(query)));
+
+    const matchesCat = selectedCategory === 'all' || spot.category === selectedCategory;
+    return matchesSearch && matchesCat;
+  });
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {

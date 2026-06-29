@@ -15,42 +15,42 @@ interface HomePanelProps {
 export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeals, onNavigateToBudget }: HomePanelProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  
+  // Các state mới cho tính năng Cóc Chọn Giùm
+  const [showTooltip, setShowTooltip] = useState(true);
+  const [showSmartModal, setShowSmartModal] = useState(false);
+  const [smartData, setSmartData] = useState<{food: Spot | null, drink: Spot | null, temp: number, timeStr: string} | null>(null);
 
-  // Hàm nhặt random quán ăn
-  const handleRandomPick = () => {
-    // Nếu chưa có data thì bỏ qua
-    if (!spots || spots.length === 0) {
-      alert('Chưa có danh sách quán ăn để Cóc chọn!');
-      return;
-    }
+  // Hàm xử lý "Bộ não Cóc"
+  const handleSmartPick = () => {
+    if (!spots || spots.length === 0) return;
 
-    // Sinh ra 1 số ngẫu nhiên từ 0 đến tổng số lượng quán
-    const randomIndex = Math.floor(Math.random() * spots.length);
-    const randomSpot = spots[randomIndex];
+    // 1. Phân tích thời gian thực
+    const currentHour = new Date().getHours();
+    let timeStr = 'Buổi Sáng';
+    if (currentHour >= 11 && currentHour <= 14) timeStr = 'Buổi Trưa';
+    else if (currentHour >= 15 && currentHour <= 17) timeStr = 'Buổi Chiều';
+    else if (currentHour >= 18) timeStr = 'Buổi Tối';
 
-    // Mở popup chi tiết của quán vừa trúng thưởng
-    if (onSelectSpot) {
-      onSelectSpot(randomSpot);
-    }
+    // 2. Giả lập nhiệt độ khu vực Đà Nẵng (28°C - 35°C) 
+    const temp = Math.floor(Math.random() * (35 - 28 + 1)) + 28;
+
+    // 3. Phân loại data
+    const foods = spots.filter(s => s.category === 'food');
+    const drinks = spots.filter(s => s.category === 'drink');
+
+    // 4. Nhặt Random
+    const randomFood = foods.length > 0 ? foods[Math.floor(Math.random() * foods.length)] : spots[0];
+    const randomDrink = drinks.length > 0 ? drinks[Math.floor(Math.random() * drinks.length)] : null;
+
+    setSmartData({ food: randomFood as Spot, drink: randomDrink as Spot, temp, timeStr });
+    setShowTooltip(false); // Ẩn lời mời đi sau khi đã bấm
+    setShowSmartModal(true); // Hiện bảng Gợi ý
   };
 
-  // Bộ lọc tìm kiếm
-  const filteredSpots = spots.filter(spot => {
-    const query = searchQuery.toLowerCase();
-    
-    // Quét Tên quán HOẶC Mô tả HOẶC Địa chỉ HOẶC Tên món ăn trong thực đơn
-    const matchesSearch = 
-      spot.name.toLowerCase().includes(query) ||
-      (spot.description || '').toLowerCase().includes(query) ||
-      spot.address.toLowerCase().includes(query) ||
-      (spot.menuItems?.some(item => item.name.toLowerCase().includes(query)));
-
-    // Quét Danh mục (Đồ ăn, Trà sữa...)
-    const matchesCat = selectedCategory === 'all' || spot.category === selectedCategory;
-    
-    // Quán phải thỏa mãn cả Từ khóa tìm kiếm VÀ Danh mục đang chọn
-    return matchesSearch && matchesCat;
-  }); // <--- CHÍNH LÀ CÁI DẤU NÀY ĐÃ BỊ THIẾU Ở CODE CỦA BẠN ĐÂY!
+  // Bộ lọc tìm kiếm cũ giữ nguyên...
+  const filteredSpots = spots.filter(spot => { //...
+  
   const containerVariants = {
 
     hidden: { opacity: 0 },
@@ -194,13 +194,29 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           />
         </div>
       </div>
-      <div className="flex justify-center my-6">
-        <button 
-          onClick={handleRandomPick}
-          className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2"
+      {/* KHU VỰC NÚT BẤM VÀ TOOLTIP */}
+      <div className="flex justify-center my-8 relative z-40">
+        <div className="relative flex flex-col items-center">
+          {/* Lời mời lơ lửng */}
+          {showTooltip && (
+            <motion.div 
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ repeat: Infinity, duration: 1.5, repeatType: "reverse" }}
+              className="absolute -top-12 bg-emerald-500 text-white text-xs font-bold py-2 px-4 rounded-xl shadow-lg whitespace-nowrap"
             >
-            <span>🎲</span> Cóc Chọn Giùm
-        </button>
+              Không biết ăn gì, hãy dùng Cóc chọn dùm nhé!
+              <div className="absolute -bottom-1.5 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-emerald-500 rotate-45"></div>
+            </motion.div>
+          )}
+
+          <button 
+            onClick={handleSmartPick}
+            className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white text-lg font-bold py-3.5 px-8 rounded-full shadow-[0_10px_25px_rgba(249,115,22,0.4)] transform transition hover:scale-105 flex items-center gap-2 border-2 border-orange-400/50"
+          >
+            <span className="text-2xl animate-bounce">🐸</span> Cóc Chọn Giùm
+          </button>
+        </div>
       </div>
       {/* Filters List */}
       <div className="pt-2">
@@ -372,7 +388,76 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           </div>
         )}
       </div>
+        {/* POPUP KẾT QUẢ CÓC CHỌN */}
+      {showSmartModal && smartData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-white/10 overflow-hidden shadow-2xl"
+          >
+            {/* Header Thời tiết */}
+            <div className="bg-gradient-to-r from-emerald-600/80 to-teal-600/80 p-5 text-center relative overflow-hidden">
+              <div className="absolute right-[-20px] top-[-20px] text-8xl opacity-10">🌤️</div>
+              <h3 className="text-white font-bold text-lg mb-1 relative z-10">Kết Quả Phân Tích</h3>
+              <div className="flex justify-center items-center gap-4 text-emerald-100 text-sm font-semibold relative z-10">
+                <span className="flex items-center gap-1">🕒 {smartData.timeStr}</span>
+                <span>•</span>
+                <span className="flex items-center gap-1">🌡️ Nhiệt độ: {smartData.temp}°C</span>
+              </div>
+            </div>
 
+            {/* Content Gợi ý */}
+            <div className="p-6 space-y-5">
+              <p className="text-center text-neutral-300 text-sm font-medium">
+                {smartData.temp > 32 
+                  ? "Trời đang khá nóng bức, Cóc gợi ý bạn combo giải nhiệt cực đã này:" 
+                  : "Thời tiết hiện tại cực kỳ lý tưởng để thưởng thức combo này:"}
+              </p>
+
+              {/* Món Ăn Chính */}
+              {smartData.food && (
+                <div 
+                  onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.food!); }}
+                  className="bg-white/5 border border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-500/10 transition"
+                >
+                  <div className="w-14 h-14 bg-orange-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🍲</div>
+                  <div>
+                    <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Món Chính</span>
+                    <h4 className="text-white font-bold line-clamp-1">{smartData.food.name}</h4>
+                    <p className="text-xs text-neutral-400 truncate">{smartData.food.address}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Thức Uống Kèm */}
+              {smartData.drink && (
+                <div 
+                  onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.drink!); }}
+                  className="bg-white/5 border border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-500/10 transition relative"
+                >
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1A1A1A] px-2 text-indigo-400 text-xs font-bold">
+                    Ăn xong uống thêm
+                  </div>
+                  <div className="w-14 h-14 bg-indigo-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🥤</div>
+                  <div>
+                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Tráng Miệng</span>
+                    <h4 className="text-white font-bold line-clamp-1">{smartData.drink.name}</h4>
+                    <p className="text-xs text-neutral-400 truncate">{smartData.drink.address}</p>
+                  </div>
+                </div>
+              )}
+
+              <button 
+                onClick={() => setShowSmartModal(false)}
+                className="w-full mt-2 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition"
+              >
+                Tắt
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

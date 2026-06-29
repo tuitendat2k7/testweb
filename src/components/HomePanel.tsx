@@ -21,8 +21,8 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
   const [showSmartModal, setShowSmartModal] = useState(false);
   const [smartData, setSmartData] = useState<{food: Spot | null, drink: Spot | null, temp: number, timeStr: string} | null>(null);
 
-  // Hàm xử lý "Bộ não Cóc"
-  const handleSmartPick = () => {
+  // Hàm xử lý "Bộ não Cóc" - Đã nâng cấp API Thời tiết thực
+  const handleSmartPick = async () => {
     if (!spots || spots.length === 0) return;
 
     // 1. Phân tích thời gian thực
@@ -32,8 +32,20 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     else if (currentHour >= 15 && currentHour <= 17) timeStr = 'Buổi Chiều';
     else if (currentHour >= 18) timeStr = 'Buổi Tối';
 
-    // 2. Giả lập nhiệt độ khu vực Đà Nẵng (28°C - 35°C) 
-    const temp = Math.floor(Math.random() * (35 - 28 + 1)) + 28;
+    // 2. Kéo nhiệt độ thực tế của FPTU Đà Nẵng từ Internet
+    let temp = 30; // Nhiệt độ dự phòng
+    try {
+      // Tọa độ Vĩ độ - Kinh độ của FPT City Đà Nẵng (Ngũ Hành Sơn)
+      const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=15.968&longitude=108.258&current_weather=true');
+      const weatherData = await res.json();
+      if (weatherData && weatherData.current_weather) {
+        temp = Math.round(weatherData.current_weather.temperature);
+      }
+    } catch (error) {
+      console.error("Không lấy được thời tiết, dùng nhiệt độ mô phỏng:", error);
+      // Nếu rớt mạng thì tự động quay về random cho web khỏi sập
+      temp = Math.floor(Math.random() * (35 - 28 + 1)) + 28;
+    }
 
     // 3. Phân loại data
     const foods = spots.filter(s => s.category === 'food');
@@ -47,19 +59,6 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     setShowTooltip(false); // Ẩn lời mời đi sau khi đã bấm
     setShowSmartModal(true); // Hiện bảng Gợi ý
   };
-
-  // Bộ lọc tìm kiếm đã được khôi phục
-  const filteredSpots = spots.filter(spot => {
-    const query = searchQuery.toLowerCase();
-    const matchesSearch = 
-      spot.name.toLowerCase().includes(query) ||
-      (spot.description || '').toLowerCase().includes(query) ||
-      spot.address.toLowerCase().includes(query) ||
-      (spot.menuItems?.some(item => item.name.toLowerCase().includes(query)));
-
-    const matchesCat = selectedCategory === 'all' || spot.category === selectedCategory;
-    return matchesSearch && matchesCat;
-  });
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -402,13 +401,14 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           <motion.div 
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-white/10 overflow-hidden shadow-2xl"
+            // Chỗ này tự động đổi nền: Trắng (Light) và Đen (Dark)
+            className="bg-white dark:bg-[#1A1A1A] w-full max-w-md rounded-3xl border border-gray-200 dark:border-white/10 overflow-hidden shadow-2xl"
           >
-            {/* Header Thời tiết */}
-            <div className="bg-gradient-to-r from-emerald-600/80 to-teal-600/80 p-5 text-center relative overflow-hidden">
+            {/* Header Thời tiết (Màu Cam của bạn) */}
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-center relative overflow-hidden">
               <div className="absolute right-[-20px] top-[-20px] text-8xl opacity-10">🌤️</div>
               <h3 className="text-white font-bold text-lg mb-1 relative z-10">Kết Quả Phân Tích</h3>
-              <div className="flex justify-center items-center gap-4 text-emerald-100 text-sm font-semibold relative z-10">
+              <div className="flex justify-center items-center gap-4 text-orange-50 text-sm font-semibold relative z-10">
                 <span className="flex items-center gap-1">🕒 {smartData.timeStr}</span>
                 <span>•</span>
                 <span className="flex items-center gap-1">🌡️ Nhiệt độ: {smartData.temp}°C</span>
@@ -417,7 +417,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
 
             {/* Content Gợi ý */}
             <div className="p-6 space-y-5">
-              <p className="text-center text-neutral-300 text-sm font-medium">
+              <p className="text-center text-gray-600 dark:text-neutral-300 text-sm font-medium">
                 {smartData.temp > 32 
                   ? "Trời đang khá nóng bức, Cóc gợi ý bạn combo giải nhiệt cực đã này:" 
                   : "Thời tiết hiện tại cực kỳ lý tưởng để thưởng thức combo này:"}
@@ -427,13 +427,14 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               {smartData.food && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.food!); }}
-                  className="bg-white/5 border border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-500/10 transition"
+                  className="bg-orange-50 dark:bg-white/5 border border-orange-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-orange-100 dark:hover:bg-orange-500/10 transition"
                 >
-                  <div className="w-14 h-14 bg-orange-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🍲</div>
+                  <div className="w-14 h-14 bg-orange-100 dark:bg-orange-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🍲</div>
                   <div>
-                    <span className="text-[10px] font-bold text-orange-400 uppercase tracking-widest">Món Chính</span>
-                    <h4 className="text-white font-bold line-clamp-1">{smartData.food.name}</h4>
-                    <p className="text-xs text-neutral-400 truncate">{smartData.food.address}</p>
+                    <span className="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest">Món Chính</span>
+                    {/* Tự động đổi màu chữ Tên Quán */}
+                    <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.food.name}</h4>
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.food.address}</p>
                   </div>
                 </div>
               )}
@@ -442,23 +443,25 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
               {smartData.drink && (
                 <div 
                   onClick={() => { setShowSmartModal(false); onSelectSpot(smartData.drink!); }}
-                  className="bg-white/5 border border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-500/10 transition relative"
+                  className="bg-indigo-50 dark:bg-white/5 border border-indigo-500/30 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:bg-indigo-100 dark:hover:bg-indigo-500/10 transition relative"
                 >
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1A1A1A] px-2 text-indigo-400 text-xs font-bold">
+                  {/* Badge cắt ngang viền */}
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white dark:bg-[#1A1A1A] px-2 text-indigo-600 dark:text-indigo-400 text-xs font-bold transition-colors">
                     Ăn xong uống thêm
                   </div>
-                  <div className="w-14 h-14 bg-indigo-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🥤</div>
+                  <div className="w-14 h-14 bg-indigo-100 dark:bg-indigo-500/20 rounded-xl flex items-center justify-center text-3xl shrink-0">🥤</div>
                   <div>
-                    <span className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Tráng Miệng</span>
-                    <h4 className="text-white font-bold line-clamp-1">{smartData.drink.name}</h4>
-                    <p className="text-xs text-neutral-400 truncate">{smartData.drink.address}</p>
+                    <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest">Tráng Miệng</span>
+                    {/* Tự động đổi màu chữ Tên Quán */}
+                    <h4 className="text-gray-900 dark:text-white font-bold line-clamp-1">{smartData.drink.name}</h4>
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 truncate">{smartData.drink.address}</p>
                   </div>
                 </div>
               )}
 
               <button 
                 onClick={() => setShowSmartModal(false)}
-                className="w-full mt-2 bg-white/10 hover:bg-white/20 text-white py-3 rounded-xl font-bold transition"
+                className="w-full mt-2 bg-gray-200 dark:bg-white/10 hover:bg-gray-300 dark:hover:bg-white/20 text-gray-800 dark:text-white py-3 rounded-xl font-bold transition"
               >
                 Tắt
               </button>
@@ -466,7 +469,3 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           </motion.div>
         </div>
       )}
-
-    </div>
-  );
-}

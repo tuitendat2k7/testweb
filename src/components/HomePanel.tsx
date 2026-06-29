@@ -52,11 +52,7 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
     return matchesSearch && matchesCat;
   }); // <--- CHÍNH LÀ CÁI DẤU NÀY ĐÃ BỊ THIẾU Ở CODE CỦA BẠN ĐÂY!
   const containerVariants = {
-// ... (GIỮ NGUYÊN TOÀN BỘ PHẦN CODE BÊN DƯỚI TỪ CHỖ NÀY ĐI)
 
-
-  // Framer Motion Stagger config
-  const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,

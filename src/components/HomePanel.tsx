@@ -468,4 +468,6 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
             </div>
           </motion.div>
         </div>
-      )}
+      )}</div>
+  );
+}

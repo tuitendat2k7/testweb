@@ -19,7 +19,24 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
 // Filter spots
   const filteredSpots = spots.filter(spot => {
     const query = searchQuery.toLowerCase();
-    
+    // Hàm nhặt random quán ăn
+  const handleRandomPick = () => {
+    // Nếu chưa có data thì bỏ qua
+    if (!spots || spots.length === 0) {
+      alert('Chưa có danh sách quán ăn để Cóc chọn!');
+      return;
+    }
+
+    // Sinh ra 1 số ngẫu nhiên từ 0 đến tổng số lượng quán
+    const randomIndex = Math.floor(Math.random() * spots.length);
+    const randomSpot = spots[randomIndex];
+
+    // Mở popup chi tiết của quán vừa trúng thưởng
+    if (onSelectSpot) {
+      onSelectSpot(randomSpot);
+    }
+  };
+
     // Quét Tên quán HOẶC Mô tả HOẶC Địa chỉ HOẶC Tên món ăn trong thực đơn
     const matchesSearch = 
       spot.name.toLowerCase().includes(query) ||
@@ -177,7 +194,14 @@ export default function HomePanel({ spots, deals, onSelectSpot, onNavigateToDeal
           />
         </div>
       </div>
-
+      <div className="flex justify-center my-6">
+        <button 
+          onClick={handleRandomPick}
+          className="bg-orange-500 hover:bg-orange-600 text-white text-lg font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 flex items-center gap-2"
+            >
+            <span>🎲</span> Cóc Chọn Giùm
+        </button>
+      </div>
       {/* Filters List */}
       <div className="pt-2">
         <div className="flex flex-wrap gap-2 justify-start sm:justify-center">
